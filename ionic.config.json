@@ -1,5 +1,7 @@
 {
   "name": "expenses",
-  "integrations": {},
+  "integrations": {
+    "capacitor": {}
+  },
   "type": "angular"
 }
