@@ -1,8 +1,9 @@
 import { ExpenseService } from '../expense.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Expense } from '../expense.model';
 import { AlertController } from '@ionic/angular';
+import { NgForm, FormGroupDirective } from '@angular/forms';
 
 @Component({
   selector: 'app-expense-create',
@@ -11,7 +12,9 @@ import { AlertController } from '@ionic/angular';
 })
 export class ExpenseCreatePage implements OnInit {
   expense: Expense;
-
+  @ViewChild('expenseForm', {static:false}) expenseForm: FormGroupDirective;
+  @ViewChild('valueInput', {static: false}) valueInput: { setFocus: () => void; };
+  
   constructor(
     private expenseService: ExpenseService,
     private router: Router,
@@ -23,6 +26,10 @@ export class ExpenseCreatePage implements OnInit {
     this.activatedRoute.paramMap.subscribe(paramMap => {
       this.expense = this.expenseService.newExpense();
     });
+  }
+
+  ionViewDidEnter() {
+    this.valueInput.setFocus();
   }
 
   public onCreateExpense() {
@@ -46,5 +53,11 @@ export class ExpenseCreatePage implements OnInit {
     }).then(a => { a.present(); });
   }
 
-
+  onSubmit(formData: any) {
+    const newValue = parseFloat(formData['expense.value']);
+    if (!isNaN(newValue) && (newValue > 0)) {
+      this.expense.value = formData['expense.value'];
+      this.onCreateExpense();
+    }  
+  }
 }

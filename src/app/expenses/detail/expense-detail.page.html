@@ -4,9 +4,6 @@
       <ion-button slot="icon-only" (click)="onDeleteExpense()">
         <ion-icon name="trash"></ion-icon>
       </ion-button>
-      <ion-button slot="icon-only">
-        <ion-icon name="pencil"></ion-icon>
-      </ion-button>
       <ion-back-button defaultHref="/">
       </ion-back-button>
     </ion-buttons>
@@ -17,12 +14,13 @@
 <ion-content>
   <ion-grid>
     <ion-row>
-      <ion-col>
-        <p> Timestamp: {{ expense.timestamp }} Value: {{ expense.value }} </p>
+      <ion-col size-sm="8" offset-sm="2" size-md="6" offset-md="3" size-lg="4" offset-lg="4">
+        <ion-item><ion-label>Logged:</ion-label><ion-text>{{ expense.timestamp | date:'dd/MM/yyyy H:mm' }}</ion-text></ion-item>
+        <ion-item><ion-label>Amount:</ion-label><ion-text>{{ expense.value | currency }}</ion-text></ion-item>
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col>
+      <ion-col size-sm="8" offset-sm="2" size-md="6" offset-md="3" size-lg="4" offset-lg="4">
         <ion-img [src]="expense.imageUrl"></ion-img>
       </ion-col>
     </ion-row>

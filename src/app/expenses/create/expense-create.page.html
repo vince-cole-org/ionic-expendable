@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-buttons slot="end">
-      <ion-button slot="icon-only" (click)="onCreateExpense()">
+      <ion-button slot="icon-only" type="submit" (click)="expenseForm.ngSubmit.emit()" [disabled]="!expenseForm.form.valid">
         <ion-icon name="checkmark"></ion-icon>
       </ion-button>
       <ion-button slot="icon-only" (click)="onCancelExpense()">
@@ -13,16 +13,29 @@
 </ion-header>
 
 <ion-content>
-  <ion-grid>
-    <ion-row>
-      <ion-col>
-        <p> Timestamp: {{ expense.timestamp }} Value: {{ expense.value }} </p>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col>
-        <ion-img [src]="expense.imageUrl"></ion-img>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <form #expenseForm="ngForm" (ngSubmit)="onSubmit(this.expenseForm.form.value)">
+    <ion-grid>
+      <ion-row>
+        <ion-col size-sm="8" offset-sm="2" size-md="6" offset-md="3" size-lg="4" offset-lg="4">
+          <ion-item>
+            <ion-label>Logged:</ion-label>
+            <ion-text>{{ expense.timestamp | date:'dd/MM/yyyy H:mm' }}</ion-text>
+          </ion-item>
+          <ion-item>
+            <ion-label>Amount:</ion-label>
+            <ion-input 
+              ngModel name="expense.value" #valueInput
+              type="number" inputmode="decimal" minlength="1" required
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size-sm="8" offset-sm="2" size-md="6" offset-md="3" size-lg="4" offset-lg="4">
+          <ion-img [src]="expense.imageUrl"></ion-img>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
 </ion-content>
+
