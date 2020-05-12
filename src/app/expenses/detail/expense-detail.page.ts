@@ -1,16 +1,18 @@
 import { ExpenseService } from './../expense.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Expense } from '../expense.model';
 import { AlertController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-expense-detail',
   templateUrl: './expense-detail.page.html',
   styleUrls: ['./expense-detail.page.scss'],
 })
-export class ExpenseDetailPage implements OnInit {
+export class ExpenseDetailPage implements OnInit, OnDestroy {
   expense: Expense;
+  private expensesSub: Subscription;
 
   constructor(
     private expenseService: ExpenseService,
@@ -26,8 +28,18 @@ export class ExpenseDetailPage implements OnInit {
         return;
       }
       const expenseId = paramMap.get('expenseId');
-      this.expense = this.expenseService.getExpense(expenseId);
+
+      this.expensesSub = this.expenseService.getExpense(expenseId).subscribe(expense => {
+        this.expense = expense;
+      });
+
     });
+  }
+
+  ngOnDestroy() {
+    if (this.expensesSub) {
+      this.expensesSub.unsubscribe();
+    }    
   }
 
   public onDeleteExpense(expenseId: string) {
