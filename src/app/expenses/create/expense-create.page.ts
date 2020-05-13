@@ -76,10 +76,10 @@ export class ExpenseCreatePage implements OnInit {
       source: CameraSource.Prompt,
       correctOrientation: true,
       width: 320,
-      resultType: CameraResultType.Base64
+      resultType: CameraResultType.DataUrl
     }).then(img => {
-      // store the image data in the expense
-      this.expense.imageUrl = img.base64String;
+      // store the image data (already a data URL) in the expense
+      this.expense.imageUrl = img.dataUrl;
     }).catch(err => {
       // use the filepicker instead
       this.filePicker.nativeElement.click();
