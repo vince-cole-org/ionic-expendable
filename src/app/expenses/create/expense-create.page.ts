@@ -1,8 +1,8 @@
 import { ExpenseService } from '../expense.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Expense } from '../expense.model';
-import { AlertController } from '@ionic/angular';
+import { AlertController, Platform } from '@ionic/angular';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Plugins, Capacitor, CameraSource, CameraResultType } from '@capacitor/core';
 
@@ -14,8 +14,10 @@ import { Plugins, Capacitor, CameraSource, CameraResultType } from '@capacitor/c
 export class ExpenseCreatePage implements OnInit {
   expense: Expense;
   form: FormGroup;
-  
+  @ViewChild('filePicker', {static: false}) filePicker: ElementRef<HTMLInputElement>;
+
   constructor(
+    private platform: Platform,
     private expenseService: ExpenseService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -57,36 +59,43 @@ export class ExpenseCreatePage implements OnInit {
 
   onSubmit() {
     console.log("this.form", this.form);
-    if (!this.form.valid) { 
+    if (!this.form.valid || !this.expense.imageUrl) { 
       return; 
     }
     this.expense.value = this.form.value.expenseValue;
     this.onCreateExpense();
   }
 
-  onTakePhoto() {
+  onPickPhoto() {
     if (!Capacitor.isPluginAvailable('Camera')) {
-      console.log("camera NOT available")
-      this.showErrorAlert('Camera not available')
+      this.filePicker.nativeElement.click();
+      return;
     }
     Plugins.Camera.getPhoto({
       quality: 50,
       source: CameraSource.Prompt,
       correctOrientation: true,
-      height: 320,
-      width: 200,
+      width: 320,
       resultType: CameraResultType.Base64
     }).then(img => {
+      // store the image data in the expense
       this.expense.imageUrl = img.base64String;
     }).catch(err => {
-      this.showErrorAlert(err);
+      // use the filepicker instead
+      this.filePicker.nativeElement.click();
     });
   }
 
-  private showErrorAlert(message: string) {
-    this.alertCtrl.create({
-      header: 'Problem taking photo', 
-      message: message
-    }).then(alertEl => alertEl.present());
+  onFilePicked(event: Event) {
+    const pickedFile = (event.target as HTMLInputElement).files[0];
+    if (!pickedFile) { 
+      return; 
+    }
+    // convert the picked image to a data URL and store it in the expense
+    const fr = new FileReader();
+    fr.onload = () => {
+      this.expense.imageUrl = fr.result.toString();
+    }
+    fr.readAsDataURL(pickedFile);
   }
 }
