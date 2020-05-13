@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Expense } from '../expense.model';
 import { AlertController } from '@ionic/angular';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Plugins, Capacitor, CameraSource, CameraResultType } from '@capacitor/core';
 
 @Component({
   selector: 'app-expense-create',
@@ -61,5 +62,31 @@ export class ExpenseCreatePage implements OnInit {
     }
     this.expense.value = this.form.value.expenseValue;
     this.onCreateExpense();
+  }
+
+  onTakePhoto() {
+    if (!Capacitor.isPluginAvailable('Camera')) {
+      console.log("camera NOT available")
+      this.showErrorAlert('Camera not available')
+    }
+    Plugins.Camera.getPhoto({
+      quality: 50,
+      source: CameraSource.Prompt,
+      correctOrientation: true,
+      height: 320,
+      width: 200,
+      resultType: CameraResultType.Base64
+    }).then(img => {
+      this.expense.imageUrl = img.base64String;
+    }).catch(err => {
+      this.showErrorAlert(err);
+    });
+  }
+
+  private showErrorAlert(message: string) {
+    this.alertCtrl.create({
+      header: 'Problem taking photo', 
+      message: message
+    }).then(alertEl => alertEl.present());
   }
 }
