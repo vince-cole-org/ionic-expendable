@@ -22,7 +22,7 @@
             <ion-text>{{ expense.timestamp | date:'dd/MM/yyyy HH:mm:ss' }}</ion-text>
           </ion-item>
           <ion-item>
-            <ion-label>Amount:</ion-label>
+            <ion-label>Amount (£):</ion-label>
             <ion-input type="number" inputmode="decimal" formControlName="expenseValue"></ion-input>
           </ion-item>
           <ion-label position="floating" size="small" *ngIf="!form.get('expenseValue').valid && form.get('expenseValue').touched" color="danger">

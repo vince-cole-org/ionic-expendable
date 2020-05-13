@@ -16,7 +16,7 @@
     <ion-row>
       <ion-col size-sm="8" offset-sm="2" size-md="6" offset-md="3" size-lg="4" offset-lg="4">
         <ion-item><ion-label>Logged:</ion-label><ion-text>{{ expense.timestamp | date:'dd/MM/yyyy HH:mm:ss' }}</ion-text></ion-item>
-        <ion-item><ion-label>Amount:</ion-label><ion-text>{{ expense.value | currency }}</ion-text></ion-item>
+        <ion-item><ion-label>Amount:</ion-label><ion-text>{{ expense.value | currency:'GBP' }}</ion-text></ion-item>
       </ion-col>
     </ion-row>
     <ion-row>

@@ -2,20 +2,42 @@ import { Injectable } from '@angular/core';
 import { Expense } from './expense.model';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { take, map } from 'rxjs/operators';
+import { Plugins } from '@capacitor/core';
+
+const { Storage } = Plugins;
 
 @Injectable({
   providedIn: 'root'
 })
 export class ExpenseService {
 
-  private _expenses = new BehaviorSubject<Expense[]>([{
-    id: 'asfdtasfdta',
-    timestamp: '0000-00-00T00:00:00',
-    imageUrl: 'https://images.unsplash.com/photo-1558981001-792f6c0d5068',
-    value: 0
-  }]);
+  private _expenses = new BehaviorSubject<Expense[]>([]);
 
-  constructor() { }
+  constructor() {
+    this.loadDataFile();
+   }
+
+   async loadDataFile() {
+     const json = await Storage.get({ key: 'expenses' });
+     const data = JSON.parse(json.value);
+     if (data && data.length) {
+        this._expenses
+          .pipe(take(1))
+          .subscribe( exps => {
+            this._expenses.next( 
+              exps.concat(data)
+            )
+        });    
+     }
+   }
+
+   async saveDataFile() {
+    this._expenses
+      .pipe(take(1))
+      .subscribe( exps => {
+        Storage.set({ key: 'expenses', value: JSON.stringify(exps) });
+      });
+  }
 
   public newExpense() {
     return new Expense('', 0);
@@ -40,7 +62,8 @@ export class ExpenseService {
       .subscribe( exps => {
         this._expenses.next( 
           exps.concat(newExpense)
-        )
+        );
+        this.saveDataFile();
     });
   }
 
@@ -50,7 +73,9 @@ export class ExpenseService {
       .subscribe( exps => {
         this._expenses.next( 
           exps.filter( expense => expense.id !== expenseId )
-        )
+        );
+        this.saveDataFile();
     });
   }
+
 }

@@ -5,7 +5,7 @@
         <ion-icon name="add"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>Expenses Total: {{ sumTotal | currency }}</ion-title>
+    <ion-title>Expenses Total: {{ sumTotal | currency:'GBP' }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -34,7 +34,7 @@
                   <ion-text>{{ expense.timestamp | date:'dd/MM/yyyy' }}</ion-text>
                 </ion-col>
                 <ion-col size="4">
-                  <ion-text>{{ expense.value | currency }}</ion-text>
+                  <ion-text>{{ expense.value | currency:'GBP' }}</ion-text>
                 </ion-col>
               </ion-row>
             </ion-grid>
