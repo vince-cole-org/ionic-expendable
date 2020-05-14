@@ -18,6 +18,13 @@
         </ion-item>
       </ion-col>
     </ion-row>
+    <ion-row *ngIf="expenses && expenses.length > 0">
+      <ion-col size-sm="8" offset-sm="2" size-md="6" offset-md="3" size-lg="4" offset-lg="4">
+        <ion-item>
+          <p>Click on any expense for a more detailed view.</p>
+        </ion-item>
+      </ion-col>
+    </ion-row>
     <ion-row>
       <ion-col size-sm="8" offset-sm="2" size-md="6" offset-md="3" size-lg="4" offset-lg="4">
         <ion-virtual-scroll [items]="expenses">

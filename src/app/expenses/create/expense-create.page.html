@@ -23,7 +23,7 @@
           </ion-item>
           <ion-item>
             <ion-label>Amount (£):</ion-label>
-            <ion-input type="number" inputmode="decimal" formControlName="expenseValue"></ion-input>
+            <ion-input type="number" inputmode="decimal" formControlName="expenseValue" placeholder="Enter the amount here"></ion-input>
           </ion-item>
           <ion-label position="floating" size="small" *ngIf="!form.get('expenseValue').valid && form.get('expenseValue').touched" color="danger">
             <p>Amount must be valid as currency (e.g. 100 or 100.05) and &gt; 0</p>
@@ -31,9 +31,17 @@
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col size-sm="8" offset-sm="2" size-md="6" offset-md="3" size-lg="4" offset-lg="4" (click)="onPickPhoto()">
-          <ion-img *ngIf="expense.imageUrl" [src]=expense.imageUrl></ion-img>
-          <ion-item *ngIf="!expense.imageUrl">Click here to take a photo or pick a file</ion-item>
+        <ion-col *ngIf="expense.imageUrl" size-sm="8" offset-sm="2" size-md="6" offset-md="3" size-lg="4" offset-lg="4" (click)="onPickPhoto()">
+          <ion-img [src]=expense.imageUrl></ion-img>
+        </ion-col>
+        <ion-col *ngIf="!expense.imageUrl" size-sm="8" offset-sm="2" size-md="6" offset-md="3" size-lg="4" offset-lg="4" (click)="onPickPhoto()">
+          <ion-item>
+            <ion-label>Photo:</ion-label>
+            <ion-input formControlName="imageUrl" placeholder="Click here to take a photo or pick a file"></ion-input>
+          </ion-item>
+          <ion-label position="floating" size="small" *ngIf="!form.get('imageUrl').valid && form.get('imageUrl').touched" color="danger">
+            <p>You must take, or select, a photo</p>
+          </ion-label>
         </ion-col>
       </ion-row>
     </ion-grid>

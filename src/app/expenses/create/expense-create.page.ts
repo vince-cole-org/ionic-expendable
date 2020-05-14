@@ -32,8 +32,15 @@ export class ExpenseCreatePage implements OnInit {
       expenseValue: new FormControl(null, {
         updateOn: 'change',
         validators: [Validators.required, Validators.min(0.01), Validators.pattern(/^[0-9]{1,}(\.[0-9]{2})?$/)]
-      })
+      }),
+      imageUrl: new FormControl(null, {
+        validators: [Validators.required]
+      })      
     });
+  }
+
+  ionViewDidEnter() {
+    this.expense = this.expenseService.newExpense();
   }
 
   public onCreateExpense() {
@@ -80,6 +87,7 @@ export class ExpenseCreatePage implements OnInit {
     }).then(img => {
       // store the image data (already a data URL) in the expense
       this.expense.imageUrl = img.dataUrl;
+      this.form.patchValue({imageUrl: this.expense.imageUrl});
     }).catch(err => {
       // use the filepicker instead
       this.filePicker.nativeElement.click();
@@ -95,6 +103,7 @@ export class ExpenseCreatePage implements OnInit {
     const fr = new FileReader();
     fr.onload = () => {
       this.expense.imageUrl = fr.result.toString();
+      this.form.patchValue({imageUrl: this.expense.imageUrl});
     }
     fr.readAsDataURL(pickedFile);
   }
